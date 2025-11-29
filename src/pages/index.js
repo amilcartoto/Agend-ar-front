@@ -8,12 +8,13 @@ import TicketModal from '@/components/modals/TicketModal';
 import Footer from '@/components/Footer/Footer';
 import SearchBar from '@/components/ui/SearchBar';
 import { provincesData } from '@/data/provinces';
+import { tryParseToISO, isISOInRange } from '@/lib/dateUtils';
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [filters, setFilters] = useState({ text: '', province: '', date: '' });
+  const [filters, setFilters] = useState({ text: '', province: '', startDate: '', endDate: '' });
 
   const handleOpenModal = (evento) => { setSelectedEvent(evento); setIsModalOpen(true); };
   const handleAddToCart = (compra) => { alert(`✅ Agregado: ${compra.titulo}`); setIsModalOpen(false); };
@@ -67,13 +68,16 @@ export default function Home() {
   const filteredEvents = useMemo(() => {
     const t = (filters.text || '').toLowerCase();
     const prov = filters.province || '';
-    const date = filters.date || '';
+    const start = filters.startDate || '';
+    const end = filters.endDate || '';
 
     return allEvents.filter(ev => {
       if (prov && ev.provinceSlug !== prov) return false;
-      if (date) {
-        // match date substring: calendar events use YYYY-MM-DD, other use human dates
-        if (!ev.fecha || (!ev.fecha.includes(date) && !ev.fecha.toLowerCase().includes(date))) return false;
+      if (start || end) {
+        // try to normalize event date to ISO
+        const iso = tryParseToISO(ev.fecha);
+        if (!iso) return false;
+        if (!isISOInRange(iso, start || null, end || null)) return false;
       }
       if (!t) return true;
       return (

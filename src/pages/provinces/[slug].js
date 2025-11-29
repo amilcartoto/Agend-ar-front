@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
 import { provincesData } from '@/data/provinces';
+import { tryParseToISO, isISOInRange } from '@/lib/dateUtils';
 import EventCalendar from '@/components/calendar/EventCalendar';
 import EventCard from '@/components/cards/EventCard';
 import TicketModal from '@/components/modals/TicketModal';
@@ -19,7 +20,7 @@ export default function ProvincePage() {
 
   const provinceData = slug ? provincesData[String(slug).toLowerCase()] || null : null;
 
-  const [filters, setFilters] = useState({ text: '', province: '', date: '' });
+  const [filters, setFilters] = useState({ text: '', province: '', startDate: '', endDate: '' });
 
   const provinceEvents = useMemo(() => {
     if (!provinceData) return [];
@@ -54,12 +55,15 @@ export default function ProvincePage() {
   const filteredEvents = useMemo(() => {
     const t = (filters.text || '').toLowerCase();
     const prov = filters.province || '';
-    const date = filters.date || '';
+    const start = filters.startDate || '';
+    const end = filters.endDate || '';
 
     return provinceEvents.filter(ev => {
       if (prov && prov !== '' && prov !== String(slug)) return false;
-      if (date) {
-        if (!ev.fecha || (!ev.fecha.includes(date) && !ev.fecha.toLowerCase().includes(date))) return false;
+      if (start || end) {
+        const iso = tryParseToISO(ev.fecha);
+        if (!iso) return false;
+        if (!isISOInRange(iso, start || null, end || null)) return false;
       }
       if (!t) return true;
       return (
