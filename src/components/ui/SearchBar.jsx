@@ -6,7 +6,7 @@ export default function SearchBar({ provinces = [], onChange }) {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
-  // Debounce changes to avoid excessive updates
+
   useEffect(() => {
     const t = setTimeout(() => {
       onChange && onChange({ text: text.trim(), province, startDate, endDate });
