@@ -1,16 +1,19 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import Image from 'next/image'; 
-import { useState } from 'react';
+import Image from 'next/image';
+import { useState, useMemo } from 'react';
 import ProvinceDropdown from '@/components/ui/ProvinceDropdown';
 import EventCard from '@/components/cards/EventCard';
 import TicketModal from '@/components/modals/TicketModal';
 import Footer from '@/components/Footer/Footer';
+import SearchBar from '@/components/ui/SearchBar';
+import { provincesData } from '@/data/provinces';
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [filters, setFilters] = useState({ text: '', province: '', date: '' });
 
   const handleOpenModal = (evento) => { setSelectedEvent(evento); setIsModalOpen(true); };
   const handleAddToCart = (compra) => { alert(`✅ Agregado: ${compra.titulo}`); setIsModalOpen(false); };
@@ -21,6 +24,66 @@ export default function Home() {
     { titulo: "Carnaval Gualeguaychú", fecha: "Ene 2025", lugar: "Entre Ríos", precio: 15000, categoria: "Carnaval", imagen: "https://images.unsplash.com/photo-1565593845686-350742f9e422?auto=format&fit=crop&q=80&w=600" },
     { titulo: "Fiesta Vendimia", fecha: "Mar 2025", lugar: "Mendoza", precio: 25000, categoria: "Cultura", imagen: "https://images.unsplash.com/photo-1599077638157-c57c74318624?auto=format&fit=crop&q=80&w=600" }
   ];
+
+  // Construir lista plana de eventos a partir de provincesData
+  const allEvents = useMemo(() => {
+    const list = [];
+    Object.entries(provincesData).forEach(([slug, pdata]) => {
+      const provinceName = pdata.nombre;
+      // eventos (estructura usada por EventCard)
+      (pdata.eventos || []).forEach((ev, idx) => {
+        list.push({
+          id: `evt-${slug}-e-${idx}`,
+          titulo: ev.titulo || ev.title || '',
+          fecha: ev.fecha || ev.date || ev.start || '',
+          lugar: ev.lugar || ev.location || ev.lugar || '',
+          precio: ev.precio != null ? ev.precio : ev.price || 0,
+          categoria: ev.categoria || ev.category || '',
+          imagen: ev.imagen || ev.image || '',
+          provinceSlug: slug,
+          provinceName,
+        });
+      });
+
+      // calendario (estructura diferente)
+      (pdata.calendario || []).forEach((ev, idx) => {
+        list.push({
+          id: `cal-${slug}-c-${idx}`,
+          titulo: ev.title || ev.titulo || '',
+          fecha: ev.start || ev.fecha || '',
+          lugar: ev.location || ev.location || '',
+          precio: ev.precio != null ? ev.precio : 0,
+          categoria: ev.category || ev.category || '',
+          imagen: ev.imagen || '',
+          provinceSlug: slug,
+          provinceName,
+        });
+      });
+    });
+    return list;
+  }, []);
+
+  // Filtrado según los filtros del buscador
+  const filteredEvents = useMemo(() => {
+    const t = (filters.text || '').toLowerCase();
+    const prov = filters.province || '';
+    const date = filters.date || '';
+
+    return allEvents.filter(ev => {
+      if (prov && ev.provinceSlug !== prov) return false;
+      if (date) {
+        // match date substring: calendar events use YYYY-MM-DD, other use human dates
+        if (!ev.fecha || (!ev.fecha.includes(date) && !ev.fecha.toLowerCase().includes(date))) return false;
+      }
+      if (!t) return true;
+      return (
+        (ev.titulo && ev.titulo.toLowerCase().includes(t)) ||
+        (ev.lugar && ev.lugar.toLowerCase().includes(t)) ||
+        (ev.categoria && ev.categoria.toLowerCase().includes(t)) ||
+        (ev.provinceName && ev.provinceName.toLowerCase().includes(t))
+      );
+    });
+  }, [allEvents, filters]);
 
   return (
     <div className="min-h-screen bg-[#1e293b] text-gray-200 font-sans flex flex-col">
@@ -45,14 +108,37 @@ export default function Home() {
         <div className="relative z-10 text-center px-4 w-full max-w-4xl mx-auto mt-10">
             <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tight mb-6 drop-shadow-lg">VIVÍ <span className="text-[#2dd4bf]">ARGENTINA.</span></h1>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto font-light">Descubrí recitales, obras de teatro, deportes y festivales.</p>
-            <div className="bg-white/5 backdrop-blur-md p-4 rounded-3xl border border-[#2dd4bf]/30 inline-flex flex-col md:flex-row items-center gap-4 shadow-2xl">
+            <div className="space-y-4">
+              <div className="bg-white/5 backdrop-blur-md p-4 rounded-3xl border border-[#2dd4bf]/30 inline-flex flex-col md:flex-row items-center gap-4 shadow-2xl">
                 <span className="text-white font-medium uppercase tracking-wide text-sm">Elige tu destino:</span>
                 <div className="scale-110"><ProvinceDropdown /></div>
+              </div>
+
+              <SearchBar
+                provinces={Object.entries(provincesData).map(([slug, p]) => ({ slug, nombre: p.nombre }))}
+                onChange={(f) => setFilters(f)}
+              />
             </div>
         </div>
       </header>
 
       <main className="flex-grow bg-[#1e293b]">
+        {/* Resultados de búsqueda */}
+        <section className="max-w-7xl mx-auto px-6 py-8">
+          <div className="mb-6">
+            <h3 className="text-2xl text-white font-bold">Resultados de búsqueda</h3>
+            <p className="text-gray-400 text-sm">{filteredEvents.length} resultados</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {filteredEvents.length > 0 ? (filteredEvents.map((evento) => (
+              <EventCard key={evento.id} {...evento} onBooking={() => { setSelectedEvent(evento); setIsModalOpen(true); }} />
+            ))) : (
+              <div className="text-gray-400">No se encontraron eventos con esos filtros.</div>
+            )}
+          </div>
+        </section>
+
         <section className="max-w-7xl mx-auto px-6 py-20">
             <div className="text-center mb-16">
                 <h2 className="text-4xl font-bold text-white mb-4">Tendencias <span className="text-[#2dd4bf]">Nacionales</span> 🔥</h2>
