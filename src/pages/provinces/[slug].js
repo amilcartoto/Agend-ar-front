@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
 import { provincesData } from '@/data/provinces';
+import { tryParseToISO, isISOInRange } from '@/lib/dateUtils';
 import EventCalendar from '@/components/calendar/EventCalendar';
 import EventCard from '@/components/cards/EventCard';
 import TicketModal from '@/components/modals/TicketModal';
 import ProvinceDropdown from '@/components/ui/ProvinceDropdown';
+import SearchBar from '@/components/ui/SearchBar';
 
 export default function ProvincePage() {
   const router = useRouter();
@@ -17,6 +19,60 @@ export default function ProvincePage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const provinceData = slug ? provincesData[String(slug).toLowerCase()] || null : null;
+
+  const [filters, setFilters] = useState({ text: '', province: '', startDate: '', endDate: '' });
+
+  const provinceEvents = useMemo(() => {
+    if (!provinceData) return [];
+    const list = [];
+    (provinceData.eventos || []).forEach((ev, idx) => {
+      list.push({
+        id: `evt-${idx}`,
+        titulo: ev.titulo || ev.title || '',
+        fecha: ev.fecha || ev.date || ev.start || '',
+        lugar: ev.lugar || ev.location || '',
+        precio: ev.precio != null ? ev.precio : ev.price || 0,
+        categoria: ev.categoria || ev.category || '',
+        imagen: ev.imagen || ev.image || '',
+        raw: ev,
+      });
+    });
+    (provinceData.calendario || []).forEach((ev, idx) => {
+      list.push({
+        id: `cal-${idx}`,
+        titulo: ev.title || ev.titulo || '',
+        fecha: ev.start || ev.fecha || '',
+        lugar: ev.location || ev.lugar || '',
+        precio: ev.precio != null ? ev.precio : 0,
+        categoria: ev.category || ev.category || '',
+        imagen: ev.imagen || '',
+        raw: ev,
+      });
+    });
+    return list;
+  }, [provinceData]);
+
+  const filteredEvents = useMemo(() => {
+    const t = (filters.text || '').toLowerCase();
+    const prov = filters.province || '';
+    const start = filters.startDate || '';
+    const end = filters.endDate || '';
+
+    return provinceEvents.filter(ev => {
+      if (prov && prov !== '' && prov !== String(slug)) return false;
+      if (start || end) {
+        const iso = tryParseToISO(ev.fecha);
+        if (!iso) return false;
+        if (!isISOInRange(iso, start || null, end || null)) return false;
+      }
+      if (!t) return true;
+      return (
+        (ev.titulo && ev.titulo.toLowerCase().includes(t)) ||
+        (ev.lugar && ev.lugar.toLowerCase().includes(t)) ||
+        (ev.categoria && ev.categoria.toLowerCase().includes(t))
+      );
+    });
+  }, [provinceEvents, filters, slug]);
 
   const handleOpenModal = (evento) => { setSelectedEvent(evento); setIsModalOpen(true); };
   const handleAddToCart = (compra) => { alert(`✅ Agregado: ${compra.titulo}`); setIsModalOpen(false); };
@@ -84,11 +140,23 @@ export default function ProvincePage() {
             </div>
         </div>
 
+        <div className="space-y-6">
+            <SearchBar
+              provinces={Object.entries(provincesData).map(([s, p]) => ({ slug: s, nombre: p.nombre }))}
+              onChange={(f) => setFilters(f)}
+            />
+
+        </div>
+
         <div className="space-y-16 pb-20">
             <section>
                 <div className="flex items-center gap-3 mb-8"><div className="h-8 w-2 bg-[#2dd4bf] rounded-full"></div><h2 className="text-3xl font-bold text-white">Próximos Eventos</h2></div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {provinceData.eventos && provinceData.eventos.length > 0 ? (provinceData.eventos.map((evento, index) => <EventCard key={index} {...evento} onBooking={() => handleOpenModal(evento)} />)) : <p className="text-gray-400">Sin eventos.</p>}
+                    {filteredEvents && filteredEvents.length > 0 ? (
+                      filteredEvents.map((evento) => <EventCard key={evento.id} {...evento} onBooking={() => handleOpenModal(evento)} />)
+                    ) : (
+                      <p className="text-gray-400">Sin eventos con esos filtros.</p>
+                    )}
                 </div>
             </section>
         </div>

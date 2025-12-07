@@ -1,4 +1,4 @@
-// OJO: La variable ahora se llama 'provincesData' (en Inglés)
+
 export const provincesData = {
     "cordoba": {
       nombre: "Córdoba",
