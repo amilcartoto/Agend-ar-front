@@ -9,8 +9,6 @@ import Footer from '@/components/Footer/Footer';
 import SearchBar from '@/components/ui/SearchBar';
 import { provincesData } from '@/data/provinces';
 import { tryParseToISO, isISOInRange } from '@/lib/dateUtils';
-import Carousel from '@/components/carousel/Carousel';
-
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -131,15 +129,18 @@ export default function Home() {
       <main className="flex-grow bg-[#1e293b]">
         {/* Resultados de búsqueda */}
         <section className="max-w-7xl mx-auto px-6 py-8">
-          <div className="text-center mb-10">
-                <h2 className="text-4xl font-bold text-white mb-4">Eventos <span className="text-[#2dd4bf]">Destacados</span>🌟</h2>
-            </div>
+          <div className="mb-6">
+            <h3 className="text-2xl text-white font-bold">Resultados de búsqueda</h3>
+            <p className="text-gray-400 text-sm">{filteredEvents.length} resultados</p>
+          </div>
 
-          {filteredEvents.length > 0 ? (
-            <Carousel events={filteredEvents} onBooking={handleOpenModal} />
-          ) : (
-            <div className="text-gray-400">No se encontraron eventos con esos filtros.</div>
-          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {filteredEvents.length > 0 ? (filteredEvents.map((evento) => (
+              <EventCard key={evento.id} {...evento} onBooking={() => { setSelectedEvent(evento); setIsModalOpen(true); }} />
+            ))) : (
+              <div className="text-gray-400">No se encontraron eventos con esos filtros.</div>
+            )}
+          </div>
         </section>
 
         <section className="max-w-7xl mx-auto px-6 py-20">
@@ -150,9 +151,6 @@ export default function Home() {
                 {destacadosNacionales.map((evento, index) => <EventCard key={index} {...evento} onBooking={() => handleOpenModal(evento)} />)}
             </div>
         </section>
-
-        
-
         <section className="bg-[#0f172a] text-white py-20 relative overflow-hidden border-t border-gray-800">
              <div className="absolute top-0 right-0 w-64 h-64 bg-[#2dd4bf] rounded-full blur-[100px] opacity-10 pointer-events-none"></div>
             <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10">
@@ -163,9 +161,7 @@ export default function Home() {
                 </div>
             </div>
         </section>
-        
       </main>
-
       <Footer />
     </div>
   );

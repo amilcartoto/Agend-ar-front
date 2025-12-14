@@ -106,33 +106,4 @@ export default function UpcomingEventsModal({ open, onClose }) {
       </div>
     </div>
   );
-}
-// esto es temporal hasta que estice con tailwind
-const styles = {
-  overlay: {
-    position: "fixed",
-    inset: 0,
-    background: "rgba(0,0,0,0.5)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "20px",
-  },
-  modal: {
-    background: "white",
-    padding: "20px",
-    borderRadius: "12px",
-    width: "100%",
-    maxWidth: "420px",
-    position: "relative",
-  },
-  close: {
-    position: "absolute",
-    right: "12px",
-    top: "12px",
-    border: "none",
-    background: "transparent",
-    fontSize: "20px",
-    cursor: "pointer",
-  },
 };

@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function EventCard({ titulo, fecha, lugar, precio, imagen, categoria, onBooking }) {
   return (
-    <div className="group bg-white rounded-xl shadow-lg border border-gray-700/10 overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-80">
+    <div className="group bg-white rounded-xl shadow-lg border border-gray-700/10 overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full">
       
       <div className="relative h-48 overflow-hidden">
         <div 
