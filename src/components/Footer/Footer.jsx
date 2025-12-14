@@ -2,8 +2,6 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import Image from "next/image";
-import { Facebook, Instagram, Twitter } from "lucide-react";
 import UpcomingEventsModal from "./UpcomingEventsModal";
 import UbicacionesDropdown from "./UbicacionesDropdown";
 
