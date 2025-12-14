@@ -50,6 +50,31 @@ export default function UpcomingEventsModal({ open, onClose }) {
   // Cada vez que se abre el modal → carga datos
   useEffect(() => {
     if (open) {
+      const fetchUpcomingEvents = async () => {
+        setLoading(true);
+
+        const { from, to } = getCurrentWeekRange();
+
+        try {
+          // Simulación temporal:
+          const data = [
+            { id: 1, title: "Recital en Palermo", date: "2025-11-18" },
+            { id: 2, title: "Teatro en Córdoba", date: "2025-11-20" },
+          ];
+
+          const filtered = data.filter(
+            (e) => e.date >= from && e.date <= to
+          );
+
+          setEvents(filtered);
+        } catch (err) {
+          console.error("Error cargando eventos:", err);
+          setEvents([]);
+        }
+
+        setLoading(false);
+      };
+
       fetchUpcomingEvents();
     }
   }, [open]);

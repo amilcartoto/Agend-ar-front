@@ -1,1 +1,20 @@
 @import "tailwindcss";
+
+@theme {
+  /* --- TU PALETA DEFINITIVA --- */
+  
+  /* Verde Menta (Accent) */
+  --color-primary: #2dd4bf; 
+  --color-primary-hover: #14b8a6; 
+  
+  /* Fondo Oscuro (Base) */
+  --color-dark: #1e293b; 
+  
+  /* Fondo Secundario (Para tarjetas o secciones claras) */
+  --color-light: #f8fafc;
+}
+
+body {
+  background-color: var(--color-dark);
+  color: #e2e8f0; /* Texto claro por defecto */
+}
