@@ -91,7 +91,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#1e293b] text-gray-200 font-sans flex flex-col">
-      <Head><title>Agend-ar | Eventos</title></Head>
+      <Head><title>Agend-ar | Eventosss</title></Head>
 
       <div className="fixed bottom-4 right-4 z-[999] bg-white p-2 rounded-lg shadow-xl"><button onClick={() => setIsLoggedIn(!isLoggedIn)} className="px-3 py-1 rounded text-xs font-bold bg-green-100 text-green-700">{isLoggedIn ? '🟢 USUARIO' : '🔴 INVITADO'}</button></div>
       <TicketModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} event={selectedEvent} isLoggedIn={isLoggedIn} onLogin={() => setIsLoggedIn(true)} onAddToCart={handleAddToCart} />
