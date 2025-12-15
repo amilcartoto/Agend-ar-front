@@ -93,28 +93,27 @@ export default function ProvincePage() {
       <Head><title>Agenda {provinceData.nombre}</title></Head>
 
       <div className="fixed bottom-4 right-4 z-[999] bg-white p-2 rounded-lg shadow-xl"><button onClick={() => setIsLoggedIn(!isLoggedIn)} className="px-3 py-1 rounded text-xs font-bold bg-green-100 text-green-700">{isLoggedIn ? '🟢 LOGUEADO' : '🔴 INVITADO'}</button></div>
-      <TicketModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} event={selectedEvent} isLoggedIn={isLoggedIn} onLogin={() => setIsLoggedIn(true)} onAddToCart={handleAddToCart} />
+        <TicketModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} event={selectedEvent} isLoggedIn={isLoggedIn} onLogin={() => setIsLoggedIn(true)} onAddToCart={handleAddToCart} />
 
-      <nav className="absolute top-0 left-0 w-full z-30 p-4 md:p-6 flex justify-between items-center bg-gradient-to-b from-[#1e293b]/90 to-transparent">
-    {/* LOGO - clickeable */}
-      <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-        <div className="bg-transparent p-0">
-        <Image 
-          src="/Logo-agendar.png"
-          alt="Agend-ar" 
-          width={100} 
-          height={100} 
-          className="object-contain"
-        />
-        </div>
-      </Link>
-       <div>
-        <ProvinceDropdown />
-      </div>
+        <nav className="absolute top-0 left-0 w-full z-30 p-4 md:p-6 flex justify-between items-center bg-gradient-to-b from-[#1e293b]/90 to-transparent">
+          {/* LOGO - clickeable */}
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <div className="bg-transparent p-0">
+              <Image 
+                src="/Logo-agendar.png"
+                alt="Agend-ar" 
+                width={100} 
+                height={100} 
+                className="object-contain"
+              />
+            </div>
+          </Link>
+          <div>
+            <ProvinceDropdown />
+           </div>
+        </nav>
 
-</nav>
-
-      <div className="relative h-64 md:h-96 w-full bg-[#1e293b] overflow-hidden shadow-lg">
+        <div className="relative h-64 md:h-96 w-full bg-[#1e293b] overflow-hidden shadow-lg">
         <div className="absolute inset-0 bg-cover bg-center opacity-50 transition-all duration-1000" style={{ backgroundImage: `url('${provinceData.heroImage}')` }} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#1e293b] via-transparent to-black/30"></div>
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4 animate-in zoom-in duration-500">

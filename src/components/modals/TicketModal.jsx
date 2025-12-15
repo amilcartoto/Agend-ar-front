@@ -3,9 +3,6 @@ import React, { useState, useEffect } from 'react';
 export default function TicketModal({ isOpen, onClose, event, isLoggedIn, onLogin, onAddToCart }) {
   const [quantity, setQuantity] = useState(1);
   
-  // SOLUCIÓN AL ERROR:
-  // Usamos un pequeño setTimeout para sacar la actualización del ciclo principal de renderizado.
-  // Esto elimina el error de "cascading renders".
   useEffect(() => {
     if (isOpen) {
         const timer = setTimeout(() => setQuantity(1), 0);

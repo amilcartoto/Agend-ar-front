@@ -1,75 +1,97 @@
-import React from 'react';
-import Carrito from './carrito/Carrito';
+"use client";
 
+import { useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import Carrito from "./carrito/Carrito";
+import UbicacionesDropdown from "../Footer/UbicacionesDropdown";
 
-const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+export default function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+  const router = useRouter();
+
+  // Logo: scroll si estoy en home / redirige si no
+  const handleLogoClick = () => {
+    if (router.pathname === "/") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      router.push("/");
+    }
   };
 
   return (
-    <header className="bg-[#1e293b] shadow-lg relative z-10">
-      <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Left Side: Hamburger Menu & Brand */}
-        <div className="flex items-center space-x-4">
-          <button 
-            className="text-gray-400 hover:text-white transition-colors duration-300 md:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-expanded={isMenuOpen}
-            aria-controls="mobile-menu"
+    <>
+      {/* NAVBAR */}
+      <header className="bg-[#1e293b] shadow-lg fixed top-0 left-0 w-full z-50">
+        <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between relative">
+
+          {/* HAMBURGUESA (SIEMPRE VISIBLE) */}
+          <button
+            className="text-gray-300 text-2xl hover:text-white transition"
+            onClick={() => setMenuOpen(true)}
+            aria-label="Abrir menú"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            ☰
           </button>
-          <a href="#" className="text-2xl font-bold text-white hover:text-indigo-400 transition-colors duration-300">Eventos</a>
-        </div>
 
-        {/* Center: Logo with Scroll-to-Top */}
-         <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            {/* Logo Imagen */}
-             <div className="bg-transparent p-0">
-               <Image 
-                src="/Logo-agendar.png"
-                  alt="Agend-ar" 
-                  width={100} 
-                  height={100} 
-                  className="object-contain"/>
-              </div>
-                       
-          </Link>
-
-        {/* Right Side: Cart & Login */}
-        <div className="hidden md:flex items-center space-x-6">
-          <Carrito />
-          <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 transform hover:scale-105">
-            Login
+          {/* LOGO CENTRADO */}
+          <button
+            onClick={handleLogoClick}
+            className="absolute left-1/2 -translate-x-1/2 hover:opacity-80 transition"
+          >
+            <Image
+              src="/Logo-agendar.png"
+              alt="Agend-ar"
+              width={90}
+              height={90}
+              className="object-contain"
+            />
           </button>
-        </div>
-        
-        {/* Mobile Cart Icon */}
-        <div className="md:hidden">
+
+          {/* CARRITO + LOGIN */}
+          <div className="flex items-center gap-4">
             <Carrito />
-        </div>
-      </nav>
 
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div id="mobile-menu" className="md:hidden absolute w-full bg-[#1e293b] text-center left-0">
-          <a href="#" className="block py-3 px-4 text-white hover:bg-gray-700 transition-colors duration-300">Eventos</a>
-          <a href="#" className="block py-3 px-4 text-white hover:bg-gray-700 transition-colors duration-300">Login</a>
+            {!isLoggedIn ? (
+              <button
+                onClick={() => setIsLoggedIn(true)}
+                className="bg-[#2dd4bf] text-black font-semibold px-4 py-2 rounded-full hover:opacity-90 transition"
+              >
+                Login
+              </button>
+              ) : (
+              <span className="text-sm text-gray-300">👤 Usuario</span>
+            )}
+          </div>
+        </nav>
+      </header>
+
+      {/* MODAL HAMBURGUESA */}
+      {menuOpen && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center">
+          <div className="bg-[#1e293b] w-11/12 max-w-sm rounded-xl p-6 relative">
+
+            {/* CERRAR */}
+            <button
+              className="absolute top-3 right-4 text-xl text-gray-300 hover:text-white"
+              onClick={() => setMenuOpen(false)}
+              aria-label="Cerrar menú"
+            >
+              ✕
+            </button>
+
+            {/* TITULO */}
+            <h2 className="text-xl text-white font-bold mb-6 border-b border-[#2dd4bf] pb-2">
+              Eventos
+            </h2>
+
+            {/* UBICACIONES */}
+            <UbicacionesDropdown />
+          </div>
         </div>
       )}
-    </header>
+    </>
   );
-};
-
-export default Navbar;
-import Link from 'next/link';
-import Image from 'next/image';
-import { useState } from 'react';
+}
