@@ -95,13 +95,24 @@ export default function ProvincePage() {
       <div className="fixed bottom-4 right-4 z-[999] bg-white p-2 rounded-lg shadow-xl"><button onClick={() => setIsLoggedIn(!isLoggedIn)} className="px-3 py-1 rounded text-xs font-bold bg-green-100 text-green-700">{isLoggedIn ? '🟢 LOGUEADO' : '🔴 INVITADO'}</button></div>
       <TicketModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} event={selectedEvent} isLoggedIn={isLoggedIn} onLogin={() => setIsLoggedIn(true)} onAddToCart={handleAddToCart} />
 
-      <nav className="absolute top-0 left-0 w-full z-30 p-4 md:p-6 flex justify-between items-center bg-gradient-to-b from-[#1e293b]/90 to-transparent pointer-events-none">
-        {/* LOGO SOLO (64px) */}
-        <Link href="/" className="pointer-events-auto hover:opacity-90 transition-opacity">
-             <Image src="/Logo_agendar.png" alt="Logo" width={64} height={64} className="object-contain w-16 h-16 drop-shadow-md" />
-        </Link>
-        <div className="pointer-events-auto"><ProvinceDropdown /></div>
-      </nav>
+      <nav className="absolute top-0 left-0 w-full z-30 p-4 md:p-6 flex justify-between items-center bg-gradient-to-b from-[#1e293b]/90 to-transparent">
+    {/* LOGO - clickeable */}
+      <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <div className="bg-transparent p-0">
+        <Image 
+          src="/Logo-agendar.png"
+          alt="Agend-ar" 
+          width={100} 
+          height={100} 
+          className="object-contain"
+        />
+        </div>
+      </Link>
+       <div>
+        <ProvinceDropdown />
+      </div>
+
+</nav>
 
       <div className="relative h-64 md:h-96 w-full bg-[#1e293b] overflow-hidden shadow-lg">
         <div className="absolute inset-0 bg-cover bg-center opacity-50 transition-all duration-1000" style={{ backgroundImage: `url('${provinceData.heroImage}')` }} />

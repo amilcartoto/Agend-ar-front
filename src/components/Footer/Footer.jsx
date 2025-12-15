@@ -1,12 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link"; // <--- 1. IMPORTANTE: Importamos Link
+import Link from "next/link"; 
 import { useState } from "react";
-
-// o usa los SVGs que ya tenías abajo. El import de lucide-react es opcional si usas los SVGs manuales.
-// import { Facebook, Instagram, Twitter } from "lucide-react"; 
-
 import UpcomingEventsModal from "./UpcomingEventsModal";
 import UbicacionesDropdown from "./UbicacionesDropdown";
 
@@ -21,8 +17,6 @@ export default function Footer() {
           
           {/* COLUMNA 1: Logo */}
           <div className="space-y-4">
-            
-            {/* AQUI ESTÁ EL CAMBIO: Usamos Link en lugar de div */}
             <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
                {/* Logo Imagen */}
                <div className="bg-transparent p-0">
@@ -34,7 +28,6 @@ export default function Footer() {
                     className="object-contain"
                  />
                </div>
-               
             </Link>
 
             <p className="text-sm text-gray-400 max-w-xs leading-relaxed mt-2">
