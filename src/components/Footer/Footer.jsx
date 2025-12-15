@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link"; // <--- 1. IMPORTANTE: Importamos Link
 import { useState } from "react";
 
-// Si no tienes estos íconos instalados, asegúrate de que no den error, 
 // o usa los SVGs que ya tenías abajo. El import de lucide-react es opcional si usas los SVGs manuales.
 // import { Facebook, Instagram, Twitter } from "lucide-react"; 
 
@@ -28,7 +27,7 @@ export default function Footer() {
                {/* Logo Imagen */}
                <div className="bg-transparent p-0">
                  <Image 
-                    src="/Logo_agendar.jpg"
+                    src="/Logo-agendar.png"
                     alt="Agend-ar" 
                     width={100} 
                     height={100} 
