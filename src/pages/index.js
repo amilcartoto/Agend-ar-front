@@ -74,7 +74,7 @@ export default function Home() {
         />
 
         {/* RESTO DEL CONTENIDO — CON ESPACIO POR NAVBAR */}
-        <div className="pt-28">
+        <div className="pt-12">
           <FeaturedEventsSection
             events={filteredEvents}
             onBooking={handleOpenModal}

@@ -8,10 +8,36 @@
   --color-primary-hover: #14b8a6; 
   
   /* Fondo Oscuro (Base) */
-  --color-dark: #1e293b; 
+  --color-dark: #1e293b; /* Slate-800 (Original) */
   
   /* Fondo Secundario (Para tarjetas o secciones claras) */
   --color-light: #f8fafc;
+}
+
+.swiper-slide {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition-property: transform;
+}
+
+/* Pagination Dots Customization */
+.swiper-custom-pagination .swiper-pagination-bullet {
+  background-color: #94a3b8; /* Slate-400 */
+  opacity: 0.5;
+  width: 10px;
+  height: 10px;
+  margin: 0 8px !important;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.swiper-custom-pagination .swiper-pagination-bullet-active {
+  background-color: var(--color-primary); /* Mint */
+  opacity: 1;
+  width: 24px;
+  border-radius: 999px;
 }
 
 body {

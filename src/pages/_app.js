@@ -13,7 +13,7 @@ export default function App({ Component, pageProps }) {
         onLogin={() => setIsLoggedIn(true)}
       />
 
-      <main className="pt-28 min-h-screen bg-[#1e293b]">
+      <main className="min-h-screen bg-[#0f172a]">
         <Component {...pageProps} />
       </main>
 

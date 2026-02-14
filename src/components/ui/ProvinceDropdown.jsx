@@ -25,23 +25,14 @@ export default function ProvinceDropdown() {
   return (
     <div className="relative group">
       {/* Icono de ubicación decorativo */}
-      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 z-10">
+      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10">
         📍
       </div>
       
       <select
         value={slug || ''}
         onChange={handleChange}
-        className="
-            appearance-none cursor-pointer
-            bg-white text-gray-800 font-semibold
-            pl-10 pr-8 py-2.5 rounded-full
-            border border-gray-200 shadow-sm
-            hover:border-blue-400 hover:shadow-md
-            focus:outline-none focus:ring-2 focus:ring-blue-500
-            transition-all duration-200
-            w-full md:w-48
-        "
+        className="appearance-none cursor-pointer bg-[#1e293b] text-white font-medium pl-10 pr-8 py-2.5 rounded-full border border-gray-600 shadow-sm hover:border-[#2dd4bf] hover:shadow-[0_0_10px_rgba(45,212,191,0.2)] focus:outline-none focus:ring-2 focus:ring-[#2dd4bf] transition-all duration-200 w-full md:w-48"
       >
         <option value="" disabled>Cambiar Provincia...</option>
         {provincias.map((prov) => (

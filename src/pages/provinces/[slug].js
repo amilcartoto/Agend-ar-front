@@ -83,6 +83,10 @@ export default function ProvincePage() {
     { nombre: 'Gastronomía', id: 'gastronomia', icon: '🍷' },
     { nombre: 'Música', id: 'musica', icon: '🎵' },
     { nombre: 'Teatro', id: 'teatro', icon: '🎭' },
+    { nombre: 'Arte y Cultura', id: 'arte-y-cultura', icon: '🎨' },
+    { nombre: 'Festival', id: 'festival', icon: '🎉' },
+    { nombre: 'Naturaleza', id: 'naturaleza', icon: '🌿' },
+    { nombre: 'Aventura', id: 'aventura', icon: '🧗' },
   ];
 
   if (!slug) return <div className="p-10 text-center bg-[#1e293b] text-white">Cargando...</div>;
@@ -140,35 +144,103 @@ export default function ProvincePage() {
             </div>
         </div>
 
-        <div className="sticky top-0 z-40 bg-[#1e293b]/95 backdrop-blur-sm py-4 mb-12 border-b border-gray-700/50 shadow-sm rounded-b-2xl">
+        {/* NAVEGACIÓN DE CATEGORÍAS (Sticky - SIEMPRE VISIBLES) */}
+        <div className="sticky top-0 z-40 bg-[#1e293b]/95 backdrop-blur-sm py-4 mb-2 border-b border-gray-700/50 shadow-sm rounded-b-2xl">
             <div className="flex flex-wrap justify-center gap-2 md:gap-4 px-2">
-                {categorias.map((cat) => (
-                    <Link key={cat.id} href={`#${cat.id}`} className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full shadow-sm text-gray-700 font-medium hover:text-[#2dd4bf] hover:border-[#2dd4bf] hover:shadow-md transition-all text-sm group">
-                        <span className="group-hover:scale-110 transition-transform">{cat.icon}</span> {cat.nombre}
-                    </Link>
-                ))}
+                {(() => {
+                   // CATEGORÍAS FIJAS QUE SIEMPRE DEBEN APARECER (ORDEN ALFABÉTICO)
+                   const fixedCategories = [
+                     'Arte y Cultura', 
+                     'Deportes', 
+                     'Festival', 
+                     'Gastronomía',
+                     'Teatro'
+                   ];
+
+                   return fixedCategories.map(catName => {
+                      const catInfo = categorias.find(c => c.nombre.toLowerCase() === catName.toLowerCase()) || { 
+                        nombre: catName, 
+                        id: catName.toLowerCase().replace(/\s+/g, '-'), 
+                        icon: '📅' 
+                      };
+                      return (
+                        <Link key={catName} href={`#${catInfo.id}`} className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[#2dd4bf] border border-white/10 rounded-full shadow-sm text-gray-200 font-medium hover:text-[#1e293b] hover:border-[#2dd4bf] transition-all text-sm group">
+                            <span className="group-hover:scale-110 transition-transform">{catInfo.icon}</span> {catInfo.nombre}
+                        </Link>
+                      );
+                   });
+                })()}
             </div>
         </div>
 
-        <div className="space-y-6">
+        {/* BUSCADOR */}
+        <div className="space-y-6 mb-12">
             <SearchBar
               provinces={Object.entries(provincesData).map(([s, p]) => ({ slug: s, nombre: p.nombre }))}
               onChange={(f) => setFilters(f)}
             />
-
         </div>
 
         <div className="space-y-16 pb-20">
-            <section>
-                <div className="flex items-center gap-3 mb-8"><div className="h-8 w-2 bg-[#2dd4bf] rounded-full"></div><h2 className="text-3xl font-bold text-white">Próximos Eventos</h2></div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {filteredEvents && filteredEvents.length > 0 ? (
-                      filteredEvents.map((evento) => <EventCard key={evento.id} {...evento} onBooking={() => handleOpenModal(evento)} />)
-                    ) : (
-                      <p className="text-gray-400">Sin eventos con esos filtros.</p>
-                    )}
-                </div>
-            </section>
+            {/* SECCIONES POR CATEGORÍA (SIEMPRE VISIBLES) */}
+            {(() => {
+              // 1. Agrupar eventos disponibles
+              const eventsByCategory = filteredEvents.reduce((acc, ev) => {
+                let cat = ev.categoria || 'Varios';
+                if (cat === 'Arte' || cat === 'Cultura' || cat === 'Cultural') cat = 'Arte y Cultura';
+                if (cat === 'Gastronomia') cat = 'Gastronomía';
+                
+                if (!acc[cat]) acc[cat] = [];
+                acc[cat].push(ev);
+                return acc;
+              }, {});
+
+              // 2. Definir categorías a mostrar (Fijas + Otras si tienen eventos)
+              const fixedCategories = [
+                 'Arte y Cultura', 
+                 'Deportes', 
+                 'Festival', 
+                 'Gastronomía',
+                 'Teatro'
+              ];
+              
+              // Opcional: Si quieres mostrar también otras categorías que tengan eventos pero no estén en la lista fija
+              const internalKeys = Object.keys(eventsByCategory);
+              const allCategoriesToShow = Array.from(new Set([...fixedCategories, ...internalKeys]));
+
+              return allCategoriesToShow.map((catName) => {
+                const catInfo = categorias.find(c => c.nombre.toLowerCase() === catName.toLowerCase()) || { 
+                  nombre: catName, 
+                  id: catName.toLowerCase().replace(/\s+/g, '-'), 
+                  icon: '📅' 
+                };
+                
+                const events = eventsByCategory[catName] || [];
+
+                return (
+                  <section key={catName} id={catInfo.id} className="scroll-mt-32">
+                      <div className="flex items-center gap-3 mb-8">
+                        <div className="h-8 w-2 bg-[#2dd4bf] rounded-full"></div>
+                        <h2 className="text-3xl font-bold text-white flex items-center gap-2">
+                          <span className="text-2xl">{catInfo.icon}</span> {catName}
+                        </h2>
+                      </div>
+                      
+                      {events.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {events.map((evento) => (
+                              <EventCard key={evento.id} {...evento} onBooking={() => handleOpenModal(evento)} />
+                            ))}
+                        </div>
+                      ) : (
+                        <div className="w-full bg-white/5 border border-dashed border-gray-600 rounded-xl p-8 text-center">
+                            <p className="text-gray-400 text-lg">Próximamente eventos de {catName} en esta provincia.</p>
+                        </div>
+                      )}
+                  </section>
+                );
+              });
+            })()}
         </div>
       </main>
     </div>

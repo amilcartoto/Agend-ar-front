@@ -22,15 +22,15 @@ export default function EventCard({ titulo, fecha, lugar, precio, imagen, catego
           </span>
 
           <span className="text-gray-900 font-bold">
-            {precio === 0 ? 'Gratis' : `$${precio.toLocaleString()}`}
+            {precio === 0 ? 'Gratis' : `$${precio.toLocaleString('es-AR')}`}
           </span>
         </div>
 
-        <h3 className="text-xl font-bold text-gray-900 mb-2 leading-tight group-hover:text-[#14b8a6] transition-colors">
+        <h3 className="text-xl font-bold text-gray-900 mb-2 leading-tight group-hover:text-[#14b8a6] transition-colors line-clamp-2 min-h-[3.5rem]">
           {titulo}
         </h3>
 
-        <p className="text-gray-500 text-sm mb-4 flex items-center gap-1">
+        <p className="text-gray-500 text-sm mb-4 flex items-center gap-1 line-clamp-1">
           📍 {lugar}
         </p>
 

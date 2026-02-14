@@ -42,6 +42,14 @@ export const provincesData = {
             precio: 30000,
             categoria: "Festival",
             imagen: "https://fiestasnacionales.org/ArchivosCliente/202102170913531118_Fiesta-de-la-Vendimia.jpg"
+        },
+        {
+            titulo: "Feria de Sabores Serranos",
+            fecha: "18 Ene",
+            lugar: "Santa Rosa de Calamuchita",
+            precio: 0,
+            categoria: "Gastronomía",
+            imagen: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=600"
         }
       ]
     },

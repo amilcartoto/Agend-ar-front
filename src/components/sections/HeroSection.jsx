@@ -14,7 +14,7 @@ export default function HeroSection({ provinces, onFiltersChange }) {
               "url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=1600')",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1e293b] via-transparent to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1e293b] via-[#1e293b]/40 to-black/30" />
       </div>
 
       <div className="relative z-10 text-center px-4 w-full max-w-4xl mx-auto mt-10">
