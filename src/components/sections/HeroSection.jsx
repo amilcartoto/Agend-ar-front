@@ -5,7 +5,7 @@ import SearchBar from '@/components/ui/SearchBar';
 
 export default function HeroSection({ provinces, onFiltersChange }) {
   return (
-    <header className="relative h-[500px] flex items-center justify-center overflow-hidden bg-[#1e293b]">
+    <header className="relative h-[50vh] md:h-[75vh] flex items-center justify-center overflow-hidden bg-[#1e293b]">
       <div className="absolute inset-0">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-30"
@@ -17,7 +17,7 @@ export default function HeroSection({ provinces, onFiltersChange }) {
         <div className="absolute inset-0 bg-gradient-to-t from-[#1e293b] via-[#1e293b]/40 to-black/30" />
       </div>
 
-      <div className="relative z-10 text-center px-4 w-full max-w-4xl mx-auto mt-10">
+      <div className="relative z-10 text-center px-4 w-full max-w-4xl mx-auto translate-y-12">
         <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tight mb-6 drop-shadow-lg">
           VIVÍ <span className="text-[#2dd4bf]">ARGENTINA</span>
         </h1>
@@ -27,11 +27,11 @@ export default function HeroSection({ provinces, onFiltersChange }) {
         </p>
 
         <div className="space-y-4">
-          <div className="bg-white/5 backdrop-blur-md p-4 rounded-3xl border border-[#2dd4bf]/30 inline-flex flex-col md:flex-row items-center gap-4 shadow-2xl">
-            <span className="text-white font-medium uppercase tracking-wide text-sm">
+          <div className="bg-white/5 backdrop-blur-md px-6 py-4 rounded-full border border-[#2dd4bf]/30 inline-flex flex-col md:flex-row items-center gap-3 shadow-2xl scale-105 hover:scale-110 transition-transform duration-300">
+            <span className="text-white font-medium uppercase tracking-wide text-xs">
               Elige tu destino:
             </span>
-            <div className="scale-110">
+            <div>
               <ProvinceDropdown />
             </div>
           </div>

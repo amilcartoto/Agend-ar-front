@@ -74,6 +74,27 @@ export default function ProvincePage() {
     });
   }, [provinceEvents, filters, slug]);
 
+  const { eventsByCategory, activeCategories } = useMemo(() => {
+    const groups = filteredEvents.reduce((acc, ev) => {
+      let cat = ev.categoria || 'Varios';
+      // Normalización de categorías para consistencia
+      if (['Arte', 'Cultura', 'Cultural'].includes(cat)) cat = 'Arte y Cultura';
+      if (cat === 'Gastronomia') cat = 'Gastronomía';
+      if (cat === 'Musica') cat = 'Música';
+      
+      if (!acc[cat]) acc[cat] = [];
+      acc[cat].push(ev);
+      return acc;
+    }, {});
+
+    const fixed = ['Arte y Cultura', 'Deportes', 'Festival', 'Gastronomía', 'Teatro'];
+    const dynamic = Object.keys(groups);
+    // Unir fijas + dinámicas sin duplicados
+    const combined = Array.from(new Set([...fixed, ...dynamic]));
+    
+    return { eventsByCategory: groups, activeCategories: combined };
+  }, [filteredEvents]);
+
   const handleOpenModal = (evento) => { setSelectedEvent(evento); setIsModalOpen(true); };
   const handleAddToCart = (compra) => { alert(`✅ Agregado: ${compra.titulo}`); setIsModalOpen(false); };
 
@@ -99,7 +120,7 @@ export default function ProvincePage() {
       <div className="fixed bottom-4 right-4 z-[999] bg-white p-2 rounded-lg shadow-xl"><button onClick={() => setIsLoggedIn(!isLoggedIn)} className="px-3 py-1 rounded text-xs font-bold bg-green-100 text-green-700">{isLoggedIn ? '🟢 LOGUEADO' : '🔴 INVITADO'}</button></div>
         <TicketModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} event={selectedEvent} isLoggedIn={isLoggedIn} onLogin={() => setIsLoggedIn(true)} onAddToCart={handleAddToCart} />
 
-        <nav className="absolute top-0 left-0 w-full z-30 p-4 md:p-6 flex justify-between items-center bg-gradient-to-b from-[#1e293b]/90 to-transparent">
+        <nav className="absolute top-0 left-0 w-full z-30 p-2.5 md:p-4 flex justify-between items-center bg-gradient-to-b from-[#1e293b]/40 to-transparent backdrop-blur-md">
           {/* LOGO - clickeable */}
           <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <div className="bg-transparent p-0">
@@ -117,10 +138,10 @@ export default function ProvincePage() {
            </div>
         </nav>
 
-        <div className="relative h-64 md:h-96 w-full bg-[#1e293b] overflow-hidden shadow-lg">
+        <div className="relative h-[50vh] md:h-[75vh] w-full bg-[#1e293b] overflow-hidden shadow-lg">
         <div className="absolute inset-0 bg-cover bg-center opacity-50 transition-all duration-1000" style={{ backgroundImage: `url('${provinceData.heroImage}')` }} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#1e293b] via-transparent to-black/30"></div>
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4 animate-in zoom-in duration-500">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4 animate-in zoom-in duration-500 translate-y-12">
           <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight drop-shadow-xl mb-3 uppercase">{provinceData.nombre}</h1>
           <p className="text-lg md:text-2xl font-light text-white/90 max-w-2xl drop-shadow-md border-t border-[#2dd4bf]/50 pt-4 mt-2">{provinceData.descripcion}</p>
         </div>
@@ -145,31 +166,20 @@ export default function ProvincePage() {
         </div>
 
         {/* NAVEGACIÓN DE CATEGORÍAS (Sticky - SIEMPRE VISIBLES) */}
-        <div className="sticky top-0 z-40 bg-[#1e293b]/95 backdrop-blur-sm py-4 mb-2 border-b border-gray-700/50 shadow-sm rounded-b-2xl">
+        <div className="sticky top-0 z-40 bg-[#1e293b]/50 backdrop-blur-lg py-2.5 mb-2 border-b border-gray-700/30 shadow-sm rounded-b-2xl transition-all">
             <div className="flex flex-wrap justify-center gap-2 md:gap-4 px-2">
-                {(() => {
-                   // CATEGORÍAS FIJAS QUE SIEMPRE DEBEN APARECER (ORDEN ALFABÉTICO)
-                   const fixedCategories = [
-                     'Arte y Cultura', 
-                     'Deportes', 
-                     'Festival', 
-                     'Gastronomía',
-                     'Teatro'
-                   ];
-
-                   return fixedCategories.map(catName => {
-                      const catInfo = categorias.find(c => c.nombre.toLowerCase() === catName.toLowerCase()) || { 
-                        nombre: catName, 
-                        id: catName.toLowerCase().replace(/\s+/g, '-'), 
-                        icon: '📅' 
-                      };
-                      return (
-                        <Link key={catName} href={`#${catInfo.id}`} className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[#2dd4bf] border border-white/10 rounded-full shadow-sm text-gray-200 font-medium hover:text-[#1e293b] hover:border-[#2dd4bf] transition-all text-sm group">
-                            <span className="group-hover:scale-110 transition-transform">{catInfo.icon}</span> {catInfo.nombre}
-                        </Link>
-                      );
-                   });
-                })()}
+                {activeCategories.map(catName => {
+                   const catInfo = categorias.find(c => c.nombre.toLowerCase() === catName.toLowerCase()) || { 
+                     nombre: catName, 
+                     id: catName.toLowerCase().replace(/\s+/g, '-'), 
+                     icon: '📅' 
+                   };
+                   return (
+                     <Link key={catName} href={`#${catInfo.id}`} className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[#2dd4bf] border border-white/10 rounded-full shadow-sm text-gray-200 font-medium hover:text-[#1e293b] hover:border-[#2dd4bf] transition-all text-sm group">
+                         <span className="group-hover:scale-110 transition-transform">{catInfo.icon}</span> {catInfo.nombre}
+                     </Link>
+                   );
+                })}
             </div>
         </div>
 
@@ -182,33 +192,8 @@ export default function ProvincePage() {
         </div>
 
         <div className="space-y-16 pb-20">
-            {/* SECCIONES POR CATEGORÍA (SIEMPRE VISIBLES) */}
-            {(() => {
-              // 1. Agrupar eventos disponibles
-              const eventsByCategory = filteredEvents.reduce((acc, ev) => {
-                let cat = ev.categoria || 'Varios';
-                if (cat === 'Arte' || cat === 'Cultura' || cat === 'Cultural') cat = 'Arte y Cultura';
-                if (cat === 'Gastronomia') cat = 'Gastronomía';
-                
-                if (!acc[cat]) acc[cat] = [];
-                acc[cat].push(ev);
-                return acc;
-              }, {});
-
-              // 2. Definir categorías a mostrar (Fijas + Otras si tienen eventos)
-              const fixedCategories = [
-                 'Arte y Cultura', 
-                 'Deportes', 
-                 'Festival', 
-                 'Gastronomía',
-                 'Teatro'
-              ];
-              
-              // Opcional: Si quieres mostrar también otras categorías que tengan eventos pero no estén en la lista fija
-              const internalKeys = Object.keys(eventsByCategory);
-              const allCategoriesToShow = Array.from(new Set([...fixedCategories, ...internalKeys]));
-
-              return allCategoriesToShow.map((catName) => {
+            {/* SECCIONES POR CATEGORÍA */}
+            {activeCategories.map((catName) => {
                 const catInfo = categorias.find(c => c.nombre.toLowerCase() === catName.toLowerCase()) || { 
                   nombre: catName, 
                   id: catName.toLowerCase().replace(/\s+/g, '-'), 
@@ -239,8 +224,7 @@ export default function ProvincePage() {
                       )}
                   </section>
                 );
-              });
-            })()}
+            })}
         </div>
       </main>
     </div>
