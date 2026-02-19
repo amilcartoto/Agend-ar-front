@@ -2,13 +2,14 @@ import Carousel from '@/components/Carousel/Carousel';
 
 export default function FeaturedEventsSection({ events, onBooking }) {
   return (
-    <section className="max-w-7xl mx-auto px-6 py-8 relative">
-      {/* Fondo degradado superior */}
-      <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-[#2dd4bf]/10 to-transparent -z-10 pointer-events-none rounded-3xl" />
+    <section className="max-w-7xl mx-auto px-6 py-2 relative animate-fade-in-up">
+
+      {/* Fondo degradado superior eliminado */}
       
-      <div className="text-center mb-10">
-        <h2 className="text-4xl font-bold text-white mb-4">
-          Eventos <span className="text-[#2dd4bf]">Destacados</span> 🌟
+      <div className="relative mb-12 text-center py-10">
+        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px bg-gradient-to-r from-transparent via-[#2dd4bf]/50 to-transparent"></div>
+        <h2 className="relative inline-block px-4 bg-[#1e293b] text-4xl font-bold text-white z-10">
+          Eventos <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2dd4bf] to-[#14b8a6]">Destacados</span> 🌟
         </h2>
       </div>
 

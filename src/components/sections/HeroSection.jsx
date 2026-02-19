@@ -5,8 +5,8 @@ import SearchBar from '@/components/ui/SearchBar';
 
 export default function HeroSection({ provinces, onFiltersChange }) {
   return (
-    <header className="relative h-[50vh] md:h-[75vh] flex items-center justify-center overflow-hidden bg-[#1e293b]">
-      <div className="absolute inset-0">
+    <header className="relative min-h-[70vh] flex items-center justify-center bg-[#1e293b] pt-24 pb-12">
+      <div className="absolute inset-0 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-30"
           style={{
@@ -17,7 +17,7 @@ export default function HeroSection({ provinces, onFiltersChange }) {
         <div className="absolute inset-0 bg-gradient-to-t from-[#1e293b] via-[#1e293b]/40 to-black/30" />
       </div>
 
-      <div className="relative z-10 text-center px-4 w-full max-w-4xl mx-auto translate-y-12">
+      <div className="relative z-10 text-center px-4 w-full max-w-4xl mx-auto">
         <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tight mb-6 drop-shadow-lg">
           VIVÍ <span className="text-[#2dd4bf]">ARGENTINA</span>
         </h1>
@@ -32,7 +32,7 @@ export default function HeroSection({ provinces, onFiltersChange }) {
               Elige tu destino:
             </span>
             <div>
-              <ProvinceDropdown />
+              <ProvinceDropdown provinces={provinces} />
             </div>
           </div>
 

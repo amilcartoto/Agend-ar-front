@@ -7,29 +7,10 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 import EventCard from '@/components/cards/EventCard';
-import { provincesData } from '@/data/provinces';
-
 const Carousel = ({ onBooking, events }) => {
   // ------------------ DATA ------------------
-  const carouselEvents = useMemo(() => {
-    if (events) return events;
-
-    const list = [];
-    Object.entries(provincesData).forEach(([, pdata]) => {
-      (pdata.eventos || []).forEach((ev) => {
-        list.push({
-          titulo: ev.titulo || '',
-          fecha: ev.fecha || '',
-          lugar: ev.lugar || '',
-          precio: ev.precio != null ? ev.precio : 0,
-          categoria: ev.categoria || '',
-          imagen: ev.imagen || '',
-        });
-      });
-    });
-
-    return list;
-  }, [events]);
+  // Prioridad: eventos pasados por props
+  const carouselEvents = events || [];
 
   // ------------------ SWIPER ------------------
   const [swiperInstance, setSwiperInstance] = useState(null);

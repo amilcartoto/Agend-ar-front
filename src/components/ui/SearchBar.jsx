@@ -16,7 +16,7 @@ export default function SearchBar({ provinces = [], onChange }) {
 
   return (
       <div className="w-full max-w-5xl mx-auto mt-6">
-      <div className="bg-[#0f172a]/60 backdrop-blur-xl p-6 rounded-3xl border border-white/10 shadow-2xl">
+      <div className="bg-[#0f172a] p-6 rounded-3xl border border-gray-700 shadow-2xl relative z-20">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
           
           {/* BUSCADOR DE TEXTO */}
@@ -53,7 +53,7 @@ export default function SearchBar({ provinces = [], onChange }) {
               >
                 <option value="" className="bg-[#1e293b]">Todas</option>
                 {provinces.map(p => (
-                  <option key={p.slug} value={p.slug} className="bg-[#1e293b]">{p.nombre}</option>
+                  <option key={p.slug} value={p.slug} className="bg-[#1e293b]">{p.name}</option>
                 ))}
               </select>
               <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-gray-500">

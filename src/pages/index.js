@@ -2,7 +2,7 @@
 import Head from "next/head";
 
 // React
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Layout & UI
 import FloatingUserStatus from "@/components/ui/FloatingUserStatus";
@@ -15,14 +15,15 @@ import NationalTrendsSection from "@/components/sections/NationalTrendsSection";
 import OrganizerCTASection from "@/components/sections/OrganizerCTASection";
 
 // Data & hooks
-import { provincesData } from "@/data/provinces";
-import { useEvents } from "@/hooks/useEvents";
-import { nationalTrends } from "@/data/nationalTrends";
+import { useEvents } from "@/hooks/useEvents"; 
+import { getNationalTrends, getProvinces } from "@/services/api";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [nationalTrends, setNationalTrends] = useState([]);
+  const [provinces, setProvinces] = useState([]);
   const [filters, setFilters] = useState({
     text: "",
     province: "",
@@ -36,11 +37,24 @@ export default function Home() {
   };
 
   const handleAddToCart = (compra) => {
-    alert(`✅ Agregado: ${compra.titulo}`);
+    alert(`✅ Agregado: ${compra.title}`); // Ajustado a 'title' del backend
     setIsModalOpen(false);
   };
 
-  const { filteredEvents } = useEvents(provincesData, filters);
+  // Hook que trae eventos filtrados (para FeaturedEvents)
+  const { filteredEvents, loading } = useEvents(filters);
+
+  // Traer Tendencias y Provincias al montar
+  useEffect(() => {
+    const fetchData = async () => {
+        const trends = await getNationalTrends();
+        setNationalTrends(trends);
+
+        const provs = await getProvinces();
+        setProvinces(provs);
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#1e293b] text-gray-200 font-sans flex flex-col">
@@ -66,10 +80,7 @@ export default function Home() {
       <main className="flex-grow bg-[#1e293b]">
         {/* HERO — SIN PADDING */}
         <HeroSection
-          provinces={Object.entries(provincesData).map(([slug, p]) => ({
-            slug,
-            nombre: p.nombre,
-          }))}
+          provinces={provinces}
           onFiltersChange={setFilters}
         />
 
@@ -77,6 +88,7 @@ export default function Home() {
         <div className="pt-24">
           <FeaturedEventsSection
             events={filteredEvents}
+            loading={loading}
             onBooking={handleOpenModal}
           />
 

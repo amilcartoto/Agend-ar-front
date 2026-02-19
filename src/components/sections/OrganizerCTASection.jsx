@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function OrganizerCTASection() {
   return (
-    <section className="relative overflow-hidden py-24 bg-gradient-to-r from-[#14b8a6] to-[#0f766e]">
+    <section className="relative overflow-hidden py-24 bg-gradient-to-r from-[#1e293b] via-[#115e59] to-[#2dd4bf] animate-fade-in-up" style={{ animationDelay: '200ms' }}>
       <div className="max-w-7xl mx-auto px-6 text-center">
         <h2 className="text-4xl font-bold text-white mb-6">
           ¿Sos organizador de eventos?
