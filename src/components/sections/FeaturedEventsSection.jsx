@@ -1,4 +1,4 @@
-import Carousel from '@/components/Carousel/Carousel';
+import Carousel from '@/components/carousel/Carousel';
 
 export default function FeaturedEventsSection({ events, onBooking }) {
   return (
